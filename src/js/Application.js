@@ -26,12 +26,21 @@ export default class Application extends EventEmitter {
         price: 7.99,
       },
     ];
+    const notification = new Notification();
 
     pizzas.forEach((pizza) => {
       const card = new Card({ ...pizza });
       card.render();
 
       document.querySelector(".main").appendChild(card.container);
+
+      card.on(Card.events.ADD_TO_CART, (information) => {
+        notification.render(information);
+        document.querySelector(".notifications").appendChild(notification.container);
+
+        const button = document.querySelector("button.delete");
+        button.addEventListener("click", notification.empty);
+      });
     });
 
     this.emit(Application.events.READY);
